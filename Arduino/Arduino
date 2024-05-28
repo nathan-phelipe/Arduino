@@ -1,0 +1,76 @@
+#include <SoftwareSerial.h>
+SoftwareSerial bluetooth(0, 1); // RX, TX
+char t;
+
+#define Motoresquerdo1 8     // Pino 1 do motor esquerdo
+#define Motoresquerdo2 9     // Pino 2 do motor esquerdo
+#define Motordireito1 10     // Pino 1 do motor direito
+#define Motordireito2 11     // Pino 2 do motor direito
+
+void setup()
+{
+  Serial.begin(9600);
+  bluetooth.begin(9600);
+  pinMode(Motoresquerdo1, OUTPUT);   // Configura os motores esquerdos para frente
+  pinMode(Motoresquerdo2, OUTPUT);   // Configura os motores esquerdos para trás
+  pinMode(Motordireito1, OUTPUT);    // Configura os motores direitos para frente
+  pinMode(Motordireito2, OUTPUT);    // Configura os motores direitos para trás
+}
+
+void loop() 
+{
+  if(bluetooth.available() > 0)
+  {
+    t = bluetooth.read();
+    Serial.println(t);
+  }
+  
+  switch(t)
+  {
+    case 'F':
+      {            // Mover para frente (todos os motores giram para frente)
+        digitalWrite(Motoresquerdo1, HIGH);
+        digitalWrite(Motoresquerdo2, LOW);
+        digitalWrite(Motordireito1, HIGH);
+        digitalWrite(Motordireito2, LOW);
+        delay(10);
+      }
+      break;
+      
+    case 'T':
+      {      // Mover para trás (todos os motores giram para trás)
+        digitalWrite(Motoresquerdo1, LOW);
+        digitalWrite(Motoresquerdo2, HIGH);
+        digitalWrite(Motordireito1, LOW);
+        digitalWrite(Motordireito2, HIGH);
+        delay(10);
+      }
+      break;
+      
+    case 'E':
+      {      // Virar à direita (motores do lado esquerdo giram para frente, motores do lado direito não giram)
+        digitalWrite(Motoresquerdo1, LOW); 
+        digitalWrite(Motoresquerdo2, LOW); 
+        digitalWrite(Motordireito1, HIGH);
+        digitalWrite(Motordireito2, LOW);
+      }
+      break;
+      
+    case 'D':
+      {      // Virar à esquerda (motores do lado direito giram para frente, motores do lado esquerdo não giram)
+        digitalWrite(Motoresquerdo1, HIGH); 
+        digitalWrite(Motoresquerdo2, LOW); 
+        digitalWrite(Motordireito1, LOW);
+        digitalWrite(Motordireito2, LOW);
+      }
+      break;
+      
+    case 'P':
+      {           // PARAR (todos os motores param)
+        digitalWrite(Motoresquerdo1, LOW);
+        digitalWrite(Motoresquerdo2, LOW); 
+        digitalWrite(Motordireito1, LOW);
+        digitalWrite(Motordireito2, LOW);
+}
+}
+}
